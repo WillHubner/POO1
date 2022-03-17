@@ -2,6 +2,6 @@
 
 Conteúdo das aulas de Programação Orientada a Objetos em Java.
 
-##Turma de 3º Semestre.
+## Turma de 3º Semestre.
 
-###Unifasipe - Sinop/MT.
+### Unifasipe - Sinop/MT.
