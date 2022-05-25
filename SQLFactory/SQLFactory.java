@@ -1,22 +1,21 @@
 public class SQLFactory{
     public static void main(String[] args){
 
-        // Usuario user = new Usuario();
+        Estoque pilha = new Estoque();
 
-        // user.id = 1;
-        // user.nome = "Willian";
-        // user.login = "willian.hubner@hotmail.co.uk";
-        // user.senha = "123456";
-        // user.status = 0;
-        // user.data = "04/05/2022";
+        pilha.id = 1;
+        pilha.filial_id = 2;
+        pilha.produto_id = 42;
+        pilha.quantidade = 1900;
 
-        Carro uno = new Carro();
-        uno.ano = 2022;
-        uno.valor = 199.99;
-        uno.modelo = "Uno Economy";
-        uno.marca = "Fiat";
-
-        System.out.println(uno.insertSQL());
-
+        System.out.println("-------SELECT-------");
+        System.out.println(pilha.selectSQL());
+        System.out.println("-------INSERT-------");
+        System.out.println(pilha.insertSQL());
+        System.out.println("-------UPDATE-------");
+        System.out.println(pilha.updateSQL());
+        System.out.println("-------DELETE-------");
+        System.out.println(pilha.deleteSQL());
+    
     }
 }

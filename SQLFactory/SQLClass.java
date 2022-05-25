@@ -3,7 +3,8 @@ import java.lang.reflect.*;
 public abstract class SQLClass {
     private String tableName;
     private String listFields;
-    private String listValues;    
+    private String listValues;
+    private String listFieldsValues;    
 
     public void setTableName(String tableName){
         this.tableName = tableName;
@@ -12,6 +13,37 @@ public abstract class SQLClass {
     public String selectSQL(){
         return "select * from "+this.tableName;
     }
+
+    private String getValueKey(){
+        String value = "";
+
+        try {
+            // OBTER O NOME DO CAMPO KEY
+            String nomeKey = this.getKey(); 
+            // OBTER O FIELD COM O NOME DO CAMPO KEY
+            Field field = this.getClass().getDeclaredField(nomeKey);    
+            // OBTER O VALOR DO FIELD COM O NOME DO CAMPO KEY
+           value = value + field.get(this);
+        } catch (Exception e) {
+            e.printStackTrace();
+        }            
+
+        return value;
+    }
+
+    private String getKey(){        
+        Field[] fields = this.getClass().getDeclaredFields();            
+
+        String keyName = "";
+
+        for (Field field : fields) {
+            if (field.isAnnotationPresent(Key.class)) {
+                keyName = field.getName();
+            }
+        }
+
+        return keyName;
+    }    
 
     private String getValueField(Field field) throws Exception{
         Object valueObject = field.get(this);  
@@ -41,10 +73,26 @@ public abstract class SQLClass {
                 e.printStackTrace();
             }            
         }
-
         this.listFields = fieldList.substring(1);
         this.listValues = valueList.substring(1);
+    }
 
+    private void listAllFieldsValues(){   
+        // obtém uma lista de fields da minha classe     
+        Field[] fields = this.getClass().getDeclaredFields();
+        
+        String fieldsValuesList = "";
+
+        for (Field field : fields) {                   
+            try {
+                fieldsValuesList = 
+                    fieldsValuesList + 
+                    ", " +field.getName() + " = " +  getValueField(field);
+            } catch (Exception e) {
+                e.printStackTrace();
+            }            
+        }
+        this.listFieldsValues = fieldsValuesList.substring(1);        
     }
 
     public String insertSQL(){
@@ -55,6 +103,21 @@ public abstract class SQLClass {
         sql = sql + " ("+ this.listFields + ")";
         sql = sql + " values (" + this.listValues + ")";
 
+        return sql;
+    }
+
+    public String deleteSQL(){
+        return "delete from "+this.tableName +" where "+this.getKey() + " = " + this.getValueKey();
+    }
+
+    public String updateSQL(){
+        listAllFieldsValues();
+        String sql;
+
+        sql = "update "+this.tableName + " set";
+        sql = sql + this.listFieldsValues;
+        sql = sql + " where "+this.getKey() + " = " + this.getValueKey();
+        
         return sql;
     }
 }
