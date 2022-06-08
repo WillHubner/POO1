@@ -1,11 +1,13 @@
 public class Carro extends SQLClass{
-    Carro(){
-        this.setTableName("carros");
-    };
-
+    @Key
+    int id;
     String modelo;
     String marca;
     int ano;
     double valor;
+
+    Carro(){
+        this.setTableName("carros");
+    };    
     
 }
